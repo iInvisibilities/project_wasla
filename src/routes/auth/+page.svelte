@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { BuyerInfo, SellerInfo, UserInfo } from "$lib/user_info";
+	import type { BuyerInfo, CourierInfo, SellerInfo, UserInfo } from "$lib/user_info";
 	import LL from "../../i18n/i18n-svelte";
     
     let user_input: UserInfo = $state({
@@ -32,6 +32,15 @@
             };
         }
     });
+
+
+
+    let curr_working_city_val: string = $state("");
+	function submit_working_city(event: KeyboardEvent & { currentTarget: EventTarget & HTMLInputElement; }) {
+		if (event.key != "Enter") return;
+        (user_input.user_info as CourierInfo).working_cities.push(curr_working_city_val);
+        curr_working_city_val = "";
+	}
 </script>
 
 <div>
@@ -63,9 +72,10 @@
         <label for="residence">residence</label> <input bind:value={(user_input.user_info as SellerInfo).residence} type="text" id="residence">
     {/if}
     {#if user_input.type == 2}
-        <select multiple>
-            
-        </select>
+        {#each (user_input.user_info as CourierInfo).working_cities as city, i}
+            <span>{city}</span> <button onclick={_ => (user_input.user_info as CourierInfo).working_cities.splice(i, 1)}>x</button>
+        {/each}
+        <input bind:value={curr_working_city_val} type="text" onkeyup={submit_working_city}>
     {/if}
 {/if}
 </div>
