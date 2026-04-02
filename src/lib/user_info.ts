@@ -21,4 +21,3 @@ export type CourierInfo = {
     working_cities: string[];
     working_hours: number[];
 }
-
